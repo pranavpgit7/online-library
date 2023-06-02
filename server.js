@@ -20,6 +20,7 @@ const bodyParser = require('body-parser');
 //setting routes folders (relative path)
 const indexRouter = require('./routes/index');
 const authorRouter = require('./routes/authors');
+const bookRouter = require('./routes/books');
 
 //set view engine as ejs
 app.set('view engine', 'ejs');
@@ -44,6 +45,7 @@ app.use(bodyParser.urlencoded({
 //using routes for index path
 app.use('/', indexRouter);
 app.use('/authors', authorRouter);
+app.use('/books', bookRouter);
 
 mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser : true

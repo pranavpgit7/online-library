@@ -3,57 +3,48 @@ const express = require('express');
 const router = express.Router();
 
 //requiring that author model that we created inside models folder
+const multer = require('multer');
+const path = require('path');
+
+const Book = require('../models/book');
 const Author = require('../models/author');
 
-//All authors route
-router.get('/', async (req,res)=>{
-    let searchOptions = {};
+const uploadPath = path.join('public', Book.coverImageBasePath);
+const imageMimeTypes = ['images/jpeg','images/png','images/gif'];
 
-    //using req.query instead of req.body because it is using get method**
-    if(req.query.name != null && req.query.name !== '')
-    {
-        searchOptions.name = new RegExp(req.query.name, 'i'); //here i means case insensitive, regExpr is used for auto-completion while checking or searching authors, because that is how it works
+
+const upload = multer({
+    dest: uploadPath,
+    fileFilter: (req, file, callback) => {
+        callback(null, imageMimeTypes.includes(file.mimetype))
     }
+});
 
+//All books route
+router.get('/', (req,res)=>{
+    res.send("All Books");
+});
+
+//New book route
+router.get('/new', async (req,res)=>{
     try{
-        const authors = await Author.find(searchOptions);
-        res.render('authors/index', { authors : authors, searchOptions : req.query });
+        const authors = await Author.find({});
+        const book = new Book();
+        res.render('books/new', { authors : authors, book : book });
     }catch{
-        res.redirect('/');
+        res.redirect('/books')
     }
-    
-});
+})
 
-//New authors route
-router.get('/new', (req,res)=>{
-    res.render('authors/new', { author : new Author()});
-});
-
-//Create author route
+//Create book route
 router.post('/', async (req,res)=>{
-
-    const author = new Author({
-        name : req.body.name
-    });
-
-    try{
-        const newAuthor = await author.save();
-        //         // res.redirect(`authors/${newAuthor.id}`)
-            res.redirect('authors')
-    }catch{
-        res.render('authors/new', {author : author, errorMessage : "Error Creating Author"})
-    }
-
-    /*----------------------- the below code doesnt seem to work----------------------------- */
-    // author.save((error, newAuthor)=>{
-    //     if(error)
-    //     {
-    //         res.render('authors/new', { author : author, errorMessage : "Error creating author" });
-    //     }else{
-    //         // res.redirect(`authors/${newAuthor.id}`)
-    //         res.redirect(`authors`)
-    //     }
-    // })
+    const book = new Book({
+        title: req.body.title,
+        author: req.body.author,
+        publishDate: new Date(req.body.publishDate),
+        pageCount: req.body.pageCount,
+        description: req.body.description
+    })
 });
 
 module.exports = router;
