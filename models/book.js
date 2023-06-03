@@ -3,7 +3,7 @@ const coverImageBasePath = 'uploads/bookCovers';
 
 //schema essentially another word or term for a table, database table **
 const bookSchema = new mongoose.Schema({
-    name: {
+    title: {
         type: String,
         required: true
     },
