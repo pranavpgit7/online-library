@@ -54,17 +54,17 @@ router.post('/', upload.single('cover'), async (req,res)=>{
 async function renderNewPage(res, book, hasError = false){
     try{
         const authors = await Author.find({});
-        const params = {
-            authors : authors, 
-            book : book 
-        }
+        // const params = {
+        //     authors : authors, 
+        //     book : book 
+        // }
 
         if(hasError)
         {
             params.errorMessage = 'Error Creating Book';
         }
 
-        res.render('books/new', { params });
+        res.render('books/new', { book, authors }); //error fixed
         // res.render('books/_form_fields', { book: book });
 
     }catch{

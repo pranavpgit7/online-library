@@ -34,6 +34,11 @@ const bookSchema = new mongoose.Schema({
     }
 });
 
+// bookSchema.virtual('coverImagePath').get(function () {
+//     if (this.coverImageName != null) {
+//         return path.join('/', coverImageBasePath, this.coverImageName)
+//     }
+// });
 //first of all, creating a new model, also in here Author represents the table name, and authorSchema defines that table
 module.exports = mongoose.model('Book', bookSchema);
 module.exports.coverImageBasePath = coverImageBasePath; //exporting in the name as coverImageBasePath, unlike default ways
